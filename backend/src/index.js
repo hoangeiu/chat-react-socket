@@ -12,7 +12,7 @@ dotenv.config();
 // Initialize express app
 const app = express();
 
-app.use(express.json()); // Middleware to parse JSON bodies
+app.use(express.json({ limit: "1mb" })); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
 app.use(
   cors({
