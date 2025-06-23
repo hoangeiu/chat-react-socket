@@ -12,7 +12,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import { useThemeStore } from "./store/useThemeStore";
 
 const App = () => {
-  const { user, checkAuth, isCheckAuth } = useAuthStore();
+  const { user, checkAuth, isCheckingAuth } = useAuthStore();
   const { theme } = useThemeStore();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckAuth && !user) {
+  if (isCheckingAuth && !user) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />

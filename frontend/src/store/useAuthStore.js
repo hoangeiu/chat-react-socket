@@ -7,9 +7,10 @@ export const useAuthStore = create((set) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
-  isCheckAuth: true,
+  isCheckingAuth: true,
+  onlineUsers: [],
   checkAuth: async () => {
-    set({ isCheckAuth: true });
+    set({ isCheckingAuth: true });
     try {
       const response = await axiosInstance.get("/auth/check");
       set({ user: response.data });
@@ -17,7 +18,7 @@ export const useAuthStore = create((set) => ({
       console.error("Error checking authentication:", error);
       set({ user: null });
     } finally {
-      set({ isCheckAuth: false });
+      set({ isCheckingAuth: false });
     }
   },
   signup: async (data) => {
