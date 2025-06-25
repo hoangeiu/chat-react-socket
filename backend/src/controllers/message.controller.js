@@ -1,5 +1,6 @@
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -19,6 +20,7 @@ export const getMessages = async (req, res) => {
   try {
     // Id of the user that logged in user chat with
     const { id } = req.params;
+
     const loggedInUserId = req.user._id;
 
     // Fetch messages between the logged-in user and the specified user
