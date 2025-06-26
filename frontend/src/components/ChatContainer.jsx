@@ -1,19 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
+import { formatMessageTime } from "../utils/utils";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
-import { useAuthStore } from "../store/useAuthStore";
-import { formatMessageTime } from "../utils/utils";
 
 const ChatContainer = () => {
-  const { messages, getMessages, isMessagesLoading, selectedUser } =
-    useChatStore();
+  const {
+    messages,
+    getMessages,
+    isMessagesLoading,
+    selectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
   const { user } = useAuthStore();
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser?._id);
-  }, [getMessages, selectedUser]);
+    // Subscribe to new messages for the selected user
+    subscribeToMessages();
+
+    return () => {
+      // Unsubscribe from messages when the component unmounts or selectedUser changes
+      unsubscribeFromMessages();
+    };
+  }, [
+    getMessages,
+    selectedUser?._id,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
+
+  useEffect(() => {
+    // Scroll to the bottom of the chat when messages change
+    if (messageEndRef.current && messages.length > 0) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   if (isMessagesLoading) {
     return (
@@ -36,6 +62,7 @@ const ChatContainer = () => {
               message.senderId === user._id ? "chat-end" : "chat-start"
             }`}
             key={message._id}
+            ref={messageEndRef}
           >
             <div className="chat-image avatar">
               <div className="size-10 rounded-full border">
