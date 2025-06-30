@@ -64,7 +64,7 @@ export const useChatStore = create((set, get) => ({
       const isMessageSentFromSelectedUser =
         newMessage.senderId === selectedUser._id;
       // Ignore messages not from the selected user
-      if (isMessageSentFromSelectedUser) return;
+      if (!isMessageSentFromSelectedUser) return;
       // Add the new message to the messages state
       set({ messages: [...get().messages, newMessage] });
     });
